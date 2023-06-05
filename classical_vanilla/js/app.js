@@ -1,3 +1,8 @@
+// localStorage.tasks = JSON.stringify([
+//   { id: 1, content: "tache 1", completed: true },
+//   { id: 2, content: "tache 2", completed: false },
+// ]);
+
 localStorage.tasks =
   localStorage.tasks === undefined
     ? JSON.stringify([])
