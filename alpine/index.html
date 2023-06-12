@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-framework="javascript">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <title>AlpineJS • TodoMVC</title>
     <link rel="stylesheet" href="css/base.css" />
     <link rel="stylesheet" href="css/index.css" />
-    <title>Alpine</title>
   </head>
   <body>
     <section
       class="todoapp"
       x-data="{
-      tasks: JSON.parse(localStorage.tasks)
+      tasks: JSON.parse(localStorage.tasks),
+      newTaskContent: null,
+      addTask () {
+        this.tasks.unshift({id: new Date().valueOf(), content:this.newTaskContent, completed: false}); 
+        localStorage.tasks = JSON.stringify(this.tasks); 
+        this.newTaskContent = null;
+      }
     }"
     >
       <header class="header">
@@ -21,6 +25,8 @@
           class="new-todo"
           placeholder="What needs to be done?"
           autofocus
+          x-model="newTaskContent"
+          @keyup.enter="addTask"
         />
       </header>
       <section class="main">
@@ -28,7 +34,7 @@
         <label for="toggle-all">Mark all as complete</label>
         <ul class="todo-list">
           <template x-for="task in tasks">
-            <li :class="task.completed ? 'completed': ''">
+            <li :class="task.completed ? 'completed' : ''">
               <div class="view">
                 <input
                   class="toggle"
@@ -43,7 +49,7 @@
         </ul>
       </section>
       <footer class="footer">
-        <span class="todo-count"><span>1</span> item left</span>
+        <span class="todo-count"><span>1</span> item(s) left</span>
         <ul class="filters">
           <li>
             <a href="#/" class="selected">All</a>
@@ -58,16 +64,23 @@
         <button class="clear-completed">Clear completed</button>
       </footer>
     </section>
+    <footer class="info">
+      <p>Double-click to edit a todo</p>
+      <p>
+        Created by <a href="http://twitter.com/oscargodson">Oscar Godson</a>
+      </p>
+      <p>
+        Refactored by
+        <a href="https://github.com/cburgmer">Christoph Burgmer</a>
+      </p>
+      <p>Part of <a href="http://todomvc.com">TodoMVC</a></p>
+    </footer>
     <script>
-      // localStorage.tasks = JSON.stringify([
-      //   { id: 1, content: "tache 1", completed: true },
-      //   { id: 2, content: "tache 2", completed: false },
-      // ]);
-
-      localStorage.tasks =
-        localStorage.tasks === undefined
-          ? JSON.stringify([])
-          : JSON.stringify(JSON.parse(localStorage.tasks));
+      // 1. Initialiser le localStorage
+      // tasks -> []
+      if (localStorage.tasks === undefined) {
+        localStorage.tasks = JSON.stringify([]);
+      }
     </script>
     <script src="https://unpkg.com/alpinejs" defer></script>
   </body>
