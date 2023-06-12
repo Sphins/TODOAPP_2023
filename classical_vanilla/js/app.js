@@ -7,6 +7,7 @@
 // {id:xxx, content: 'xx', completed:xxx}
 function getTaskDomElement(task) {
   const li = document.createElement("li");
+  li.setAttribute("data-id", task.id);
   if (task.completed) {
     li.classList.add("completed");
   }
@@ -55,10 +56,38 @@ document.querySelector(".new-todo").addEventListener("keyup", function (e) {
     tasks.unshift(newTask);
 
     // 3. Ecraser le localStorage.tasks avec les tasks
-    //localStorage.setItem('tasks', JSON.stringify(tasks));
-    localStorage.tasks = JSON.stringify(tasks);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 
     // 4. Vider le champs
     this.value = "";
   }
+});
+
+//terminer une tache -----------------------------------------
+// Quand on change la checkbox
+// 1.on toggle la classe completed sur le li correspondant
+const toggle = document.querySelectorAll(".toggle");
+
+toggle.forEach((toggleItem) => {
+  toggleItem.addEventListener("change", function () {
+    const liElement = this.closest("li");
+
+    liElement.classList.toggle("completed");
+
+    // 2.On modifie la task dans le tasks (true/false)
+
+    const taskId = liElement.dataset.id;
+
+    const taskElement = tasks.findIndex(
+      (task) => String(task.id) === String(taskId)
+    );
+
+    console.table(taskElement);
+
+    tasks[taskElement].completed = this.checked;
+
+    // 3 on ecrase le localStorage.tasks
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  });
 });
