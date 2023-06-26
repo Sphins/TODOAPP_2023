@@ -16,7 +16,22 @@
         this.tasks.unshift({id: new Date().valueOf(), content:this.newTaskContent, completed: false}); 
         localStorage.tasks = JSON.stringify(this.tasks); 
         this.newTaskContent = null;
-      }
+      },
+      deleteTask(taskId){
+        const taskIndex = this.tasks.findIndex(task => task.id == taskId);
+        if (taskIndex !== -1) {
+          this.tasks.splice(taskIndex, 1);
+          localStorage.tasks = JSON.stringify(this.tasks);
+        }
+      },
+      updateCompleted(taskId){
+        const taskIndex = this.tasks.findIndex(task => task.id == taskId);
+        if (taskIndex !== -1) {
+          this.task.completed = !this.task.completed
+          localStorage.tasks = JSON.stringify(this.tasks);
+        }
+      },
+
     }"
     >
       <header class="header">
@@ -40,9 +55,10 @@
                   class="toggle"
                   type="checkbox"
                   x-model="task.completed"
+                  @click="updateCompleted(task.id)"
                 />
-                <label x-text="task.content"></label>
-                <button class="destroy"></button>
+                <label x-text="task.content" ></label>
+                <button class="destroy" @click="deleteTask(task.id)"></button>
               </div>
             </li>
           </template>
