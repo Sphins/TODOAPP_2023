@@ -14,23 +14,19 @@
       newTaskContent: null,
       addTask () {
         this.tasks.unshift({id: new Date().valueOf(), content:this.newTaskContent, completed: false}); 
-        localStorage.tasks = JSON.stringify(this.tasks); 
+        this.saveLocalStorage
         this.newTaskContent = null;
+      },     
+      saveLocalStorage(){
+        localStorage.tasks = JSON.stringify(this.tasks);
       },
       deleteTask(taskId){
-        const taskIndex = this.tasks.findIndex(task => task.id == taskId);
-        if (taskIndex !== -1) {
-          this.tasks.splice(taskIndex, 1);
-          localStorage.tasks = JSON.stringify(this.tasks);
-        }
+        this.tasks = this.tasks.filter(task => task.id != id)
+        this.saveLocalStorage;
       },
-      updateCompleted(taskId){
-        const taskIndex = this.tasks.findIndex(task => task.id == taskId);
-        if (taskIndex !== -1) {
-          this.task.completed = !this.task.completed
-          localStorage.tasks = JSON.stringify(this.tasks);
-        }
-      },
+      updateItemCount(){
+        return this.tasks.filter(task => !task.completed).length;
+      }
 
     }"
     >
@@ -55,7 +51,7 @@
                   class="toggle"
                   type="checkbox"
                   x-model="task.completed"
-                  @click="updateCompleted(task.id)"
+                  @change="saveLocalStorage()"
                 />
                 <label x-text="task.content" ></label>
                 <button class="destroy" @click="deleteTask(task.id)"></button>
@@ -65,7 +61,7 @@
         </ul>
       </section>
       <footer class="footer">
-        <span class="todo-count"><span>1</span> item(s) left</span>
+        <span class="todo-count"><span x-text="updateItemCount()"></span> item(s) left</span>
         <ul class="filters">
           <li>
             <a href="#/" class="selected">All</a>
